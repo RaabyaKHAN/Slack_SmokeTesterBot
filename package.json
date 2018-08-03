@@ -1,0 +1,15 @@
+{
+  "name": "slack_smoketester",
+  "version": "1.0.0",
+  "description": "Slackbot that assigns smoke testing",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Raabya Khan",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "slackbots": "^1.1.0"
+  }
+}
