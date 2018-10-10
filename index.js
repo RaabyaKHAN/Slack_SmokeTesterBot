@@ -9,7 +9,7 @@ const bot = new Slackbot({
 //Start Handler
 bot.on('start', function(){
     bot.postMessageToChannel(
-    'qa-team',
+    'test123',
     'Get ready to smoke test. Here are your assignments for the week \n'+assignMembers(),
     ':fire:'
     );
