@@ -69,7 +69,6 @@ const testingAreas = {
     }
 }
 
-testingAreas
 function getTestingAreas() {
     var areas = new Map([
         [testingAreas.ATLAS.area, testingAreas.ATLAS.points],
@@ -90,8 +89,5 @@ function getTestingAreas() {
         [testingAreas.TR_APPLICATION.area, testingAreas.TR_APPLICATION.points],
         [testingAreas.TR_DOWNLOAD.area, testingAreas.TR_DOWNLOAD.points]
     ]);
-    areas.forEach( (k,v) => {console.log(v,k);} );
-    console.log();
+    return areas;
 }
-
-getTestingAreas();
