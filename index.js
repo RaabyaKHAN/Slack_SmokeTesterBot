@@ -1,6 +1,8 @@
 const Slackbot = require ('slackbots');
 const axios = require ('axios');
-var qaMembers = ['Chance', 'Kaygee', 'Raabya', 'James', 'Emily', 'Pat'];
+var qaMembers = new Array();
+qaMembers = ['Chance', ' Kaygee', ' Raabya', ' James', ' Emily', ' Pat'];
+var channel = "test123";
 const bot = new Slackbot({
    token: 'xoxb-2670620364-398066704102-o0W7SYki1zAK00tfNGJYah4h',
    name: 'SmokeTesterBot'
@@ -9,10 +11,9 @@ const bot = new Slackbot({
 //Start Handler
 bot.on('start', function(){
     bot.postMessageToChannel(
-    'test123',
-    'Get ready to smoke test. Here are your assignments for the week \n'+assignMembers(),
-    ':fire:'
-    );
+    channel,
+    'Get ready to smoke test. Here are your assignments for the week \n'+assignMembers()
+    )
 }
 );
 
@@ -20,29 +21,22 @@ bot.on('start', function(){
 bot.on('error',(err)=> console.log(err));
 
 //Message Handler
-bot.on('message', data => {
-   if (data.type !== 'message') {
+bot.on("message", (data) => {
+   if (data.type !== "message") {
      return;
    }
-
    handleMessage(data.text);
  });
 
- // Respons to Data
+ // Response to Data
  function handleMessage(message) {
-   if (message.includes('addmember')) {
-       bot.postMessageToChannel('qa-team', 'Who is the new QA team Member?')
-       var member = bot.getUser();
-           addMember(member.text);
-           bot.postMessage('testforraabya','Ok I have added '+member.text+' to the member list')
-           bot.postMessage('testforraabya','This is the current list of members')
-   } else if (message.includes('removemember')) {
-     removeMember()
-     bot.postMessageToChannel('qa-team', 'Who is leaving us?')
-     data => {
-       removeMember(data.text);
+   if (message.includes("addmember")) {
+    addMember(message); 
+    displayMembers();
+   } 
+   else if (message.includes("removemember")) {
+       removeMember(message);
      }
-   }
  }
 function assignMembers(){
    var areaForSmokeTesting =
@@ -71,12 +65,33 @@ function shuffleArray (array){
    return array
 }
 
-function addMember(newMember)
+function addMember(member)
 {
+  member = member.replace("addmember","");
+  var indexOfMemberName = member.indexOf('>');
+  member = member.substring(indexOfMemberName+2);
+  member = member.trim();
+  var newMember = ' '+member; 
    qaMembers.push(newMember);
+   bot.postMessage(channel,'Ok I have added '+newMember+' to the member list');
+}
+
+function displayMembers()
+{
+  bot.postMessage(channel,'This is the current list of members ' +qaMembers.toString());
 }
 
 function removeMember(memberToRemove)
 {
-   qaMembers.splice(qaMembers.findIndex(memberToRemove),1)
+    memberToRemove = memberToRemove.replace("removemember","");
+    var indexOfMemberName = memberToRemove.indexOf('>');
+    memberToRemove = memberToRemove.substring(indexOfMemberName+2);
+    console.log(memberToRemove); 
+    if (qaMembers.includes(memberToRemove)){
+    var indexOfMemberName = qaMembers.indexOf(memberToRemove)
+    qaMembers.splice(indexOfMemberName,1);
+    displayMembers();
+  }
+  else
+  {bot.postMessageToChannel(channel,"The member does not exist")}
 }
