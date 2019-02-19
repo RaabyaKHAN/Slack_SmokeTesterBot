@@ -1,7 +1,10 @@
+//var testingAreas = require('./testing-areas.js');
 const Slackbot = require ('slackbots');
 const axios = require ('axios');
 var qaMembers = new Array();
 qaMembers = ['Chance', ' Kaygee', ' Raabya', ' James', ' Emily', ' Pat'];
+var browsers = new Array();
+browsers = ['Firefox', 'Safari', 'Internet Explorer','Edge'];
 var channel = "test123";
 const bot = new Slackbot({
    token: 'xoxb-2670620364-398066704102-o0W7SYki1zAK00tfNGJYah4h',
@@ -21,11 +24,11 @@ bot.on('start', function(){
 bot.on('error',(err)=> console.log(err));
 
 //Message Handler
-bot.on("message", (data) => {
-   if (data.type !== "message") {
+bot.on("message", (inputFromChannel) => {
+   if (inputFromChannel.type !== "message") {
      return;
    }
-   handleMessage(data.text);
+   handleMessage(inputFromChannel.text);
  });
 
  // Response to Data
@@ -36,20 +39,25 @@ bot.on("message", (data) => {
    } 
    else if (message.includes("removemember")) {
        removeMember(message);
+       displayMembers();
      }
  }
 function assignMembers(){
-   var areaForSmokeTesting =
-   ['Translator Application, Tranlation job claim, Translator customer side, Workspace claim jobs (TR, CP, SU, TR)',
+  //console.log(testingAreas.getAreasOf(2));
+  var areaForSmokeTesting = 
+   ['Translator Application, Translation job claim, Translator customer side, Workspace claim jobs (TR, CP, SU, TR)',
    'Line Editor (SR, Non-SR), CTCE timestamped (Desktop + Mobil), CTCE non-timestamped (Desktop + Mobil)',
    'Dash, CPCE (Desktop + Mobil), SU Editor, SU Customer editor (Desktop + Mobil)',
    'Freelancer CP, Freelancer SU, Freelancer TC',
    'Temi set up order (Mobil + Dekstop), Temi Editor (Mobil + Dekstop)',
    'QC & Grading, Customer Experience: Payment & Billing, My Files & Search Files, Order Hitory'];
+
+   //var k =[]
    qaMembers = shuffleArray (qaMembers);
+   browsers = shuffleArray(browsers);
    var temp='';
    for (var i = qaMembers.length-1; i >=0; i--)
-   temp = temp + '@'+qaMembers[i]+' : '+ areaForSmokeTesting[i] +'\n';
+   temp = temp + '@'+qaMembers[i]+' : '+ areaForSmokeTesting[i] +' (Browser: '+browsers[Math.floor(Math.random() * browsers.length)]+')'+'\n';
    return temp;
 }
 
@@ -73,7 +81,7 @@ function addMember(member)
   member = member.trim();
   var newMember = ' '+member; 
    qaMembers.push(newMember);
-   bot.postMessage(channel,'Ok I have added '+newMember+' to the member list');
+   bot.postMessageToChannel(channel,'Ok I have added '+newMember+' to the member list');
 }
 
 function displayMembers()
